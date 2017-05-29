@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title> Example</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</head>
+<body style="background-image: url('/website-design-background.jpg') ;background-repeat: repeat ;background-size: 100% auto;">
+
+<div class="container-fluid">
+	<div class="row content">
+    	<div class="col-sm-3 sidenav" id="side_div">
+    		<div>
+    			<button class="btn btn-primary" style="font-size: 150%;width: 100%;margin-top: 0;margin-bottom: 10%;border-radius: 4px;" type="button" onclick="toggle_11(this)" id="login_name">b_zhanaikhanov</button>
+    			<ul class="nav nav-pills nav-stacked" id="ul11" style="display: none;">
+					<li class="null"><a id="profile_btn">Profile</a></li>
+					<li class="null"><a id="messages_btn">Messages</a></li>
+					<li class="null"><a id="log_out_btn">Log Out</a></li>
+    			</ul>
+  			</div>
+      		<!-- <h4 style="font-family: Bankgothic Md Bt Medium" id="login_name"></h4> -->
+      		<img src="/123.jpeg" class="img-rounded" style="margin-left: 0%; width: 100%; height: auto;margin-bottom: 10%;margin-right: 0;margin-top: 0%;" id="image_id">
+		    <ul class="nav nav-pills nav-stacked">
+		    	<li class="active"><a href="/">Home</a></li>
+		        <li><a href="http://intranet2.kbtu.kz/">Intranet2</a></li>
+		        <li><a href="http://intranet2.kbtu.kz/OR2/">OR</a></li>
+		   
+		    </ul>
+	      	<div class="input-group">
+		        <input class="form-control" value="" placeholder="First name..." id="chat_1">
+		    	    <span class="input-group-btn">
+		        		<button class="btn btn-default" type="button" id="find_user">
+		        			<span class="glyphicon glyphicon-search"></span>
+		          		</button>
+		     	    </span>
+    		</div>
+		</div>
+	</div>
+	<div style="margin-left: 0%;padding: 0%;">
+
+
+	</div>
+  	<div class="form-group" id="comment_div" style="margin-left: 19%;">
+	  	<textarea placeholder="Type your comment here..." value='' class="form-control" rows="3" id="comment" style="width: 642px; font-size: 19px; height: 50px; border-width: 0px; border-radius: 50px; margin: 14px; text-align: center; padding-top: 10px; vertical-align: middle;border: 1px solid #ccc;margin-left: 5%;"  ></textarea>
+		<button type="submit" class="btn btn-primary btn-info" style="width: auto;font-size: x-large;border-radius: 50px;height: 50px;margin: 13px;text-align: center;" id="update_button">
+			New posts
+			<span class="badge" style="font-size: 100%;border-radius: 50%;top:0px" id="che_tam_id">0</span>
+		</button>
+	</div>
+	<div class="form-group" id="comment_div_1" style="margin-left: 19%;">
+	  	<textarea placeholder="Type your comment here..." value='' class="form-control" rows="3" id="comment_1" style="width: 642px; font-size: 19px; height: 50px; border-width: 0px; border-radius: 50px; margin: 14px; text-align: center; padding-top: 10px; vertical-align: middle;border: 1px solid #ccc;margin-left: 5%;"  ></textarea>
+		<button type="submit" class="btn btn-primary btn-danger" style="width: 17%;font-size: x-large;border-radius: 50px;height: 50px;margin: 13px;text-align: center;" id="update_button_1" onclick="leave_edit_btn(this)">
+			Leave
+		</button>
+	</div> 
+  	<div class="media" id="chat_div">
+			
+  	</div>
+
+</div>
+ 
+<style> 
+	#update_button {
+		width: 20%;
+		font-size: x-large;
+	}
+
+	#chat_div {
+		margin-left: 20%;
+		margin-top: 0%;
+		width: 79%;
+		padding-top: 0%;
+		padding-left: 0%;
+		padding-right: 0;
+		display: grid;
+		margin-top: 7%;
+	}
+	#side_div {
+		width: 20%;
+		height: auto;
+		border: 1px #d7d7d7;
+		position: fixed;
+		border-radius: 1px;
+		background-color: #eeeeee;
+		margin: 0%;
+		padding: 2%;
+		box-shadow: 4px 1px 8px 8px rgba(221, 221, 221, 1);
+	}
+	#comment_div {
+		width: 78%;
+		display: -webkit-flex;
+		position: fixed;
+		z-index: 1;
+	}
+	#comment_div_1 {
+		width: 78%;
+		display: none;
+		position: fixed;
+		z-index: 1;
+	}
+	.panel {
+		margin-bottom: 3%;
+		border: 0;
+	}
+	.panel-primary {
+		border: 0;
+		box-shadow: 0 0;
+		background-color: unset;
+	}
+	.panel-heading {
+		position: relative;
+		padding: 10px 15px;
+		border-radius: 50px;
+		width: -moz-min-content;
+		border: 1px solid transparent;
+	}
+
+	a {
+		text-align: center;
+	}
+
+	.panel-primary > .panel-heading {
+    color: black;
+    background-color: unset;
+	}
+
+</style>
+
+<script>
+var last_message_id = '' 
+	
+
+$(document).ready(function() {
+
+	
+		$("#update_button").click()
+		var profile = "get_info"
+		$.post("server.py",{profile},function(data, status) {
+			// body...
+			$("#login_name").text(data.login)
+
+		},"json")
+
+
+		// setInterval(function() {
+		// 	// body...
+		// 	var che_tam = 'che_tam=1'
+		// 	$.post('server.py',che_tam,function(data, status) {
+		// 		// body...
+		// 		var counter = data.opazdal_na.toString()
+		// 		$("#che_tam_id").text(counter)
+
+		// 	},"json")
+		// },100000)
+
+
+
+});
+
+$("#log_out_btn").click(function() {
+	// body...
+
+	var log_out="1";
+	$.post("server.py",{log_out},function(data, status) {
+		// body...
+		if (data.status == "success") {
+			window.location.reload()
+		} else {
+			alert("Error, Try later...")
+			$("log_out_btn").attr("class",'btn btn-danger')
+		}
+	},'json')
+});
+
+// $("#snd").click(function() {
+// 	// body...
+//  $.ajax({
+//         // Your server script to process the upload
+//         url: 'photor.py',
+//         type: 'POST',
+
+//         // Form data
+//         data: new FormData($('#frm')[0]),
+
+//         // Tell jQuery not to process data or worry about content-type
+//         // You *must* include these options!
+//         cache: false,
+//         contentType: false,
+//         processData: false,
+
+//         // Custom XMLHttpRequest
+//         xhr: function() {
+//             var myXhr = $.ajaxSettings.xhr();
+//             if (myXhr.upload) {
+//                 // For handling the progress of the upload
+//                 myXhr.upload.addEventListener('progress', function(e) {
+//                     if (e.lengthComputable) {
+//                         $('progress').attr({
+//                             value: e.loaded,
+//                             max: e.total,
+//                         });
+//                     }
+//                 } , false);
+//             }
+//             return myXhr;
+//         },
+//     });
+// })
+
+
+$("#comment").on({
+dblclick : function() {
+		var a = $("#comment").val()
+		var too = "comment="+a
+
+		if ( a.toString().length != 0) {
+		 	$.post("server.py",too,function(data , status) {
+		 		if (data.status == "success") {
+		 			$("#send_btn").attr("class","btn btn-primary btn-success")
+		 			$("#update_button").click();
+		 			$("#comment").attr('placeholder','Type your comment here...')	 	
+		 			$("#comment").val('')
+		 		} else {
+		 			$("#send_btn").attr("class","btn btn-primary btn-danger")
+		 			$("#comment").attr('placeholder','Pleace type something...')	 	
+		 		}
+
+			 	},"json") } else {
+		 			$("#send_btn").attr("class","btn btn-primary btn-danger")
+		 			$("#comment").attr('placeholder','Pleace type something...')	 	
+		 		}
+} ,	
+blur:function() {
+		var a = $("#comment").val()
+		var too = "comment="+a
+
+		if ( a.toString().length != 0) {
+		 	$.post("server.py",too,function(data , status) {
+		 		if (data.status == "success") {
+		 			$("#send_btn").attr("class","btn btn-primary btn-success")
+		 			$("#update_button").click();
+		 			$("#comment").attr('placeholder','Type your comment here...')	 	
+		 			$("#comment").val('')
+		 		} else {
+		 			$("#send_btn").attr("class","btn btn-primary btn-danger")
+		 			$("#comment").attr('placeholder','Pleace type something...')	 	
+		 		}
+
+			 	},"json") } else {
+		 			$("#send_btn").attr("class","btn btn-primary btn-danger")
+		 			$("#comment").attr('placeholder','Pleace type something...')	 	
+		 		}
+} })
+
+$("#update_button").click(function() {
+	$.getJSON("phones.json",function(data, status) {
+
+		var i = 1;
+		$("#chat_div").empty();
+		while (data[i] != "undefined") {
+	   		var user_name = data[i]["name"];
+	   		var comment = data[i]["comment"];	
+			var id_message = data[i]["id"];		
+
+			i++;
+
+			var ulka = $('<ul></ul>').attr({
+				"id":id_message,
+				"style":"display: -webkit-inline-flex;width: -moz-available;"
+			});
+		
+			var imgka = $('<img>').attr({
+				"src":"/123.jpeg",
+				"class":"img-rounded",
+				"style":" width: 100px; height: auto;height:90px;box-shadow: 4px 1px 8px 8px rgba(221,221,221,1);position: relative;",
+			});
+
+			var div1 = $('<div></div>').attr({
+				"class":"panel panel-primary",
+				"style":"width: 80%;margin-left: 1%;margin-top: 0%;box-sizing: border-box;position: relative;margin-bottom: 3%;",
+				"id":user_name,
+				"onclick":"toogle_debug_1(this);"
+			}); 
+			var aika1 = $('<a></a>').text(user_name)
+			if (user_name == $("#login_name").text()) {
+				var aika2 = $('<a class = "btns1" onclick="delete_message(this)"></a>').text("Delete").attr("style","margin-left: 25%;display: none;")
+				var aika3 = $('<a class = "btns1" onclick="edit_message(this)"></a>').text("Edit").attr("style","margin-left: 25%;display: none;")	
+			} else {
+				var aika2 = $('<a class = "btns1"></a>').text("Profile").attr("style","margin-left: 25%;display: none;")
+				var aika3 = $('<a class = "btns1"></a>').text("Message").attr("style","margin-left: 25%;display: none;")	
+			}
+			var div11 = $('<div></div>').attr({
+				"class":"panel-heading",
+				"style":"width: 20%;left: 1%;position: relative;"
+			}).append(aika1, aika2, aika3);
+		
+
+			var div12 = $('<div></div>').attr({
+				"class":"panel-body",
+				"style":"display: -moz-inline-grid;position: relative;padding: 0px;margin-bottom: 0px;width: 100%;"
+			}).text(comment);
+			
+			
+			div1.append(div11,div12);
+			ulka.append(imgka,div1);
+
+			$("#chat_div").prepend(ulka);
+		};
+
+	});
+	});
+
+
+function toggle_11(argument) {
+	// body...
+	$("#ul11").slideToggle("slow")
+}
+
+$('#log_out_btn').hover(function() {
+	$(this).parent().attr("class","active")},function() {
+	
+	$(this).parent().attr("class","null")
+})
+
+$('#profile_btn').hover(function() {
+	// body...
+	$(this).parent().attr("class","active")
+	},function() {
+	// body...
+	$(this).parent().attr("class","null")
+})
+
+$('#messages_btn').hover(function() {
+	// body...
+	$(this).parent().attr("class","active")
+	},function() {
+	// body...
+	$(this).parent().attr("class","null")
+})
+
+$("#find_user").click(function() {
+	// body...
+
+});
+
+function toogle_debug_1(argument) {
+	var a = $(argument).find("div:first");
+
+	if (a.children("a:last").attr("style") != "margin-left: 25%;") {
+			a.animate({left:"60%",width:"20%"},"slow","swing",function() {
+				// body...
+				a.children("a:first").next().fadeToggle("slow");
+				a.children("a:last").fadeToggle("slow");
+	
+			}).animate({left:"1%",width:"79%"},"slow","swing")
+		} else {
+			a.animate({left:"60%",width:"20%"},"slow","swing",function() {
+				// body...
+				a.children("a:first").next().fadeToggle("slow");
+				a.children("a:last").fadeToggle("slow");
+	
+			}).animate({left:"1%",width:"20%"},"slow","swing")
+		}	
+};
+
+function edit_message(argument) {
+	// body...
+	var id_of_edit = $(argument).parent().parent().parent().attr("id")
+	var text_area_edited = $(argument).parent().next()
+	last_message_id = id_of_edit
+	
+	$("#comment_div").slideToggle("slow",function() {
+		// body...
+		$("#comment_div_1").delay("slow").attr("style",'width: 78%;position: fixed;z-index: 1;display: -webkit-flex;margin-left: 19%')
+	})
+	toogle_debug_1($("#"+last_message_id).children("div:last").children("div:first").children()).click()
+
+	$(".panel-primary").removeAttr("onclick")
+	
+}
+
+function leave_edit_btn(argument) {
+	// body...
+	$("#comment_div").slideToggle("slow")
+	$("#comment_div_1").slideToggle("slow")
+	$(".panel-primary").attr("onclick",'toogle_debug_1(this);')
+	toogle_debug_1($("#"+last_message_id).children("div:last").children("div:first").children()).click()
+}
+
+$("#comment_1").on({
+	// dblclick : function() {
+	// var comment = $("#comment_1").val()
+
+	// if (comment.length > 0) {
+	// 	var t = "update="+last_message_id+"&message="+comment
+	// 	$.post('server.py',t,function(data, status) {
+	// 		// body...
+	// 		if (data.status == 'changed') {
+	// 			alert('Message has been changed')
+	// 			$("#comment_div").slideToggle("slow")
+	// 			$("#comment_div_1").slideToggle("slow")
+	// 			$(".panel-primary").attr("onclick",'toogle_debug_1(this);')
+	// 			$("#"+last_message_id).children("div:last").children("div:last").text(comment)
+	// 		} else {
+	// 			$("#comment_1").text('Server errors')
+	// 			$("#update_button_1").attr("class",'btn btn-primary btn-danger').delay(2000).attr("class",'btn btn-primary btn-info')			
+	// 		}
+	// 	},"json")
+	// } else {
+	// 	$("#comment_1").text('Type more than zero')
+	// 	$("#update_button_1").attr("class",'btn btn-primary btn-danger').delay(2000).attr("class",'btn btn-primary btn-info')
+	// }	} ,	
+	blur:function() {
+
+	var comment = $("#comment_1").val()
+
+	if (comment.length > 0) {
+		var t = "update="+last_message_id+"&message="+comment
+		$.post('server.py',t,function(data, status) {
+			// body...
+			if (data.status == 'changed') {
+				alert('Message has been changed')
+				$("#comment_div").slideToggle("slow")
+				$("#comment_div_1").slideToggle("slow")
+				$(".panel-primary").attr("onclick",'toogle_debug_1(this);')
+				$("#"+last_message_id).children("div:last").children("div:last").text(comment)
+			} else {
+				$("#comment_1").text('Server errors')
+				$("#update_button_1").attr("class",'btn btn-primary btn-danger').delay(2000).attr("class",'btn btn-primary btn-info')			
+			}
+		},"json")
+	} else {
+		$("#comment_1").text('Type more than zero')
+		$("#update_button_1").attr("class",'btn btn-primary btn-danger').delay(2000).attr("class",'btn btn-primary btn-info')
+	}
+} 
+})
+
+
+
+function delete_message(argument) {
+	// body...
+	var id_of_edit = $(argument).parent().parent().parent().attr("id")
+	var text = "kill_message="+id_of_edit;
+	$.post("server.py",text,function(data, status) {
+		// body...
+		if (data.status == "success") {
+			$("#"+id_of_edit).remove()
+			alert("message has been deleted")
+		} else {
+			alert("message has NOT been deleted, try later...")
+		}
+	},"json")
+}
+
+
+</script>
+</body>
+</html>
